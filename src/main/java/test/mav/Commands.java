@@ -48,6 +48,13 @@ public class Commands {
 			oldBookName=oldBookName.substring(1, oldBookName.length()-1);
 		};
 		
+		List<Book> books=Sqlite.ReadDB("",oldBookName);
+		if(books.size()==0) {
+			System.out.println("Wrong book name");
+			return;
+		}
+
+		
 		System.out.println("Write new name");
 		Scanner in = new Scanner(System.in);
 		String newBookName = in.nextLine();
@@ -176,7 +183,9 @@ public class Commands {
 		}
 		int firstSpace=command.indexOf(' ');
 		res.setBookName(command.substring(bookNameStart+1, bookNameEnd));
-		res.setAuthor(command.substring(firstSpace+1,bookNameStart-1));
+		String author=command.substring(firstSpace+1,bookNameStart-1).trim();
+		if(author.length()==0)throw new IllegalArgumentException("Wrong message format");
+		res.setAuthor(author);
 
 		return res;
 	}
