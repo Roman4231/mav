@@ -44,6 +44,10 @@ public class Commands {
 		int firstSpace=lastCommand.indexOf(' ');
 		String oldBookName=lastCommand.substring(firstSpace+1, lastCommand.length());
 
+		if(!bookNameCheck(oldBookName)) {
+			oldBookName=oldBookName.substring(1, oldBookName.length()-1);
+		};
+		
 		System.out.println("Write new name");
 		Scanner in = new Scanner(System.in);
 		String newBookName = in.nextLine();
@@ -109,6 +113,10 @@ public class Commands {
 		int firstSpace=lastCommand.indexOf(' ');
 		String bookName=lastCommand.substring(firstSpace+1, lastCommand.length());
 
+		if(!bookNameCheck(bookName)) {
+			bookName=bookName.substring(1, bookName.length()-1);
+		};
+		
 		List<Book> books=Sqlite.ReadDB("",bookName);
 		int rightBook=chooseBook(books);
 
