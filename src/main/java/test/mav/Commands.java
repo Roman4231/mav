@@ -42,7 +42,7 @@ public class Commands {
 
 	private static void editCommand(String lastCommand) {
 		int firstSpace=lastCommand.indexOf(' ');
-		String oldBookName=lastCommand.substring(firstSpace+1, lastCommand.length()-1);
+		String oldBookName=lastCommand.substring(firstSpace+1, lastCommand.length());
 
 		System.out.println("Write new name");
 		Scanner in = new Scanner(System.in);
@@ -138,7 +138,14 @@ public class Commands {
 	}
 
 	private static void addCommand(String lastCommand) {
-		Book book=findBook(lastCommand);
+		Book book;
+		try {
+			book=findBook(lastCommand);
+		}catch(IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			return;
+		}
+		
 		try {
 			Sqlite.WriteDB(book.getAuthor(), book.getBookName());
 
@@ -148,7 +155,7 @@ public class Commands {
 		}
 	}
 
-	private static Book findBook(String command){
+	private static Book findBook(String command)throws IllegalArgumentException{
 		Book res=new Book(); 
 
 		int bookNameStart=command.indexOf('“');
@@ -157,8 +164,8 @@ public class Commands {
 		if(bookNameStart==-1) {
 			bookNameStart=command.indexOf('"');
 			bookNameEnd=command.lastIndexOf('"');
+			if(bookNameStart==-1)throw new IllegalArgumentException("Wrong message format");
 		}
-		
 		int firstSpace=command.indexOf(' ');
 		res.setBookName(command.substring(bookNameStart+1, bookNameEnd));
 		res.setAuthor(command.substring(firstSpace+1,bookNameStart-1));
